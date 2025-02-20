@@ -48,14 +48,16 @@ class ProductsOverviewPage extends StatelessWidget {
             },
             ),
             Consumer<Cart>(
-              builder: (ctx, cart, child) => Badge(
-                label: cart.itemsCount.toString(),
-                child: IconButton(
-                  onPressed: () {},
-                   icon: Icon(Icons.shopping_cart, color: Colors.white,),
-                   ),
-              ),
+            child: IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.shopping_cart, color: Colors.white,),
             ),
+            builder: (ctx, cart, child) =>  Badge(
+              alignment: Alignment(0.4,-0.6),
+              label: Text('${counter}'),
+              child: child!,
+            ),
+          ),
         ],
       ),
       body: ProductGrid(),

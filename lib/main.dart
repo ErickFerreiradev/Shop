@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop/models/cart.dart';
 import 'package:shop/models/product_list.dart';
+import 'package:shop/pages/cart_page.dart';
 import 'package:shop/pages/product_detail_page.dart';
 import 'package:shop/pages/products_overview_page.dart';
 import 'package:shop/utils/app_routes.dart';
@@ -29,9 +30,11 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(255, 255, 90, 78), 
+            seedColor: const Color.fromARGB(255, 255, 255, 255), 
             primary: const Color.fromARGB(255, 255, 90, 78),
-            secondary: Colors.deepOrange,),
+            secondary: Colors.deepOrange,
+            
+            ),
           appBarTheme: (
             AppBarTheme(
               backgroundColor: const Color.fromARGB(255, 255, 90, 78),
@@ -45,6 +48,7 @@ class MyApp extends StatelessWidget {
         home: ProductsOverviewPage(),
         routes: {
          AppRoutes.productDetail: (ctx) => ProductDetailPage(),
+         AppRoutes.cart: (ctx) => CartPage(),
         },
         debugShowCheckedModeBanner: false,
       ),

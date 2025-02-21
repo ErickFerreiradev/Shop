@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shop/components/product_item.dart';
 import 'package:shop/models/cart.dart';
 import 'package:shop/models/product_list.dart';
+import 'package:shop/utils/app_routes.dart';
 import '../components/product_grid.dart';
 import '../models/product.dart';
 
@@ -49,7 +50,9 @@ class ProductsOverviewPage extends StatelessWidget {
             ),
             Consumer<Cart>(
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed(AppRoutes.cart);
+              },
               icon: const Icon(Icons.shopping_cart, color: Colors.white,),
             ),
             builder: (ctx, cart, child) =>  Badge(

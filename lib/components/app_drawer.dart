@@ -11,6 +11,7 @@ class AppDrawer extends StatelessWidget {
         children: [
           AppBar(
             title: Text('Bem vindo Usuário!'),
+            automaticallyImplyLeading: false,
           ),
           Divider(),
           ListTile(

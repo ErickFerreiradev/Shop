@@ -7,10 +7,12 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+  
       child: Column(
         children: [
           AppBar(
             title: Text('Bem vindo Usuário!'),
+            iconTheme: IconThemeData(color: Colors.white),
             automaticallyImplyLeading: false,
           ),
           Divider(),

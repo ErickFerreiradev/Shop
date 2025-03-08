@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop/models/product.dart';
@@ -10,6 +12,7 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final msg = ScaffoldMessenger.of(context);
     return ListTile(
       leading: CircleAvatar(
         backgroundImage: NetworkImage(product.imageUrl),
@@ -36,30 +39,28 @@ class ProductItem extends StatelessWidget {
                   content: Text('Tem certeza?'),
                   actions: [
                     TextButton(
-                      onPressed: () => Navigator.of(ctx).pop(),
+                      onPressed: () => Navigator.of(ctx).pop(false),
                        child: Text('Não'),
                        ),
                     TextButton(
                       onPressed: () {
-                        Navigator.of(ctx).pop();
-                        Provider.of<ProductList>(
-                        context,
-                        listen: false,
-                        ).removeProduct(product);
+                        Navigator.of(ctx).pop(true);
                       },
                        child: Text('Sim'),
                        ),
                   ],
                 ),
-                ).then((value){
+                ).then((value) async {
                   if (value ?? false ) {
                   try {
                     await Provider.of<ProductList>(
                       context,
                       listen: false,
                     ).removeProduct(product);
-                  } catch(error) {
-                    print(error.toString());
+                  } on HttpException catch(error) {
+                    msg.showSnackBar(
+                      SnackBar(content: Text(error.toString()))
+                    );
                   }
                   }
                 });

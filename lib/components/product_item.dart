@@ -51,7 +51,18 @@ class ProductItem extends StatelessWidget {
                        ),
                   ],
                 ),
-                );
+                ).then((value){
+                  if (value ?? false ) {
+                  try {
+                    await Provider.of<ProductList>(
+                      context,
+                      listen: false,
+                    ).removeProduct(product);
+                  } catch(error) {
+                    print(error.toString());
+                  }
+                  }
+                });
               },
                icon: Icon(Icons.delete),
                color: Theme.of(context).colorScheme.error

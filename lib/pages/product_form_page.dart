@@ -20,6 +20,8 @@ class _ProductFormPageState extends State<ProductFormPage> {
   final _formKey = GlobalKey<FormState>();
   final _formData = Map<String, Object>();
 
+  bool _isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -77,10 +79,29 @@ class _ProductFormPageState extends State<ProductFormPage> {
     }
 
     _formKey.currentState?.save();
+
+    setState(() {
+      _isLoading = true;
+    });
     
-    
-      Provider.of<ProductList>(context, listen: false).saveProductFromData(_formData);
-      Navigator.of(context).pop();
+    Provider.of<ProductList>(context, listen: false).saveProductFromData(_formData).catchError((error) {
+      return showDialog<void>(
+        context: context,
+         builder: (ctx) => AlertDialog(
+          title: Text('Ocorreu um erro'),
+          content: Text('Ocorreu um erro para salvar o produto.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+               child: Text('Ok'),
+               ),
+          ],
+         ),
+         );
+    }).then((value) {
+        setState(() =>  _isLoading = false);
+       Navigator.of(context).pop();
+       });
 
   }
 
@@ -96,7 +117,8 @@ class _ProductFormPageState extends State<ProductFormPage> {
              ),
         ],
       ),
-      body: Padding(
+      body: _isLoading ? Center(child: CircularProgressIndicator(),
+      ) : Padding(
         padding: const EdgeInsets.all(15.0),
         child: Form(
           key: _formKey,

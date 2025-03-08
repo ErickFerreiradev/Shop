@@ -13,9 +13,28 @@ enum FilterOptions {
   All,
 }
 
-class ProductsOverviewPage extends StatelessWidget {
+class ProductsOverviewPage extends StatefulWidget {
   ProductsOverviewPage({super.key});
 
+  @override
+  State<ProductsOverviewPage> createState() => _ProductsOverviewPageState();
+}
+
+class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<ProductList>(
+      context,
+      listen: false,
+    ).loadProducts().then((value) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +83,7 @@ class ProductsOverviewPage extends StatelessWidget {
           ),
         ],
       ),
-      body: ProductGrid(),
+      body: _isLoading ? Center(child: CircularProgressIndicator(),) : ProductGrid(),
       drawer: AppDrawer(),
     );
   }

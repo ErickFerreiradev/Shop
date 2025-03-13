@@ -7,11 +7,15 @@ import 'package:shop/models/order_list.dart';
 class OrdersPage extends StatefulWidget {
   const OrdersPage({super.key});
 
+
   @override
   State<OrdersPage> createState() => _OrdersPageState();
 }
 
 class _OrdersPageState extends State<OrdersPage> {
+  Future<void> _refreshOrders(BuildContext context) {
+    return Provider.of<OrderList>(context, listen: false).loadOrders();
+  }
   bool _isLoading = true;
 
   @override
@@ -37,10 +41,13 @@ class _OrdersPageState extends State<OrdersPage> {
       ),
       drawer: AppDrawer(),
       body: _isLoading ? Center(child: CircularProgressIndicator(),) 
-      : ListView.builder(
-        itemCount: orders.itensCount,
-        itemBuilder: (ctx, i) => OrderWidget(order: orders.items[i])
-        )
+      : RefreshIndicator(
+        onRefresh: () => _refreshOrders(context),
+        child: ListView.builder(
+          itemCount: orders.itensCount,
+          itemBuilder: (ctx, i) => OrderWidget(order: orders.items[i])
+          ),
+      )
     );
   }
 }

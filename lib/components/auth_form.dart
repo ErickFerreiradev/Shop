@@ -11,26 +11,60 @@ class AuthForm extends StatefulWidget {
 
 class _AuthFormState extends State<AuthForm> {
   final _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
+
   AuthMode _authMode = AuthMode.Login;
   Map<String, String> _authData = {
     'email': '',
     'password': '',
   };
 
-  void _submit() {
+  bool _isLogin() => _authMode == AuthMode.Login;
+  bool _isSignup() => _authMode == AuthMode.Signup;
 
+  void _switchAuthMode() {
+    setState(() {
+      if(_isLogin()) {
+        _authMode = AuthMode.Signup;
+      } else {
+        _authMode = AuthMode.Login;
+      }
+    });
+  }
+
+  void _submit() {
+    final isValid = _formKey.currentState?.validate() ?? false;
+
+    if(!isValid) {
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    _formKey.currentState?.save();
+
+    if(_isLogin()) {
+
+    } else {
+      
+    }
+
+    setState(() => _isLoading = false);
   }
 
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
     return Card(
+      margin: EdgeInsets.only(top: 10),
       elevation: 8,
       child: Container(
         padding: const EdgeInsets.all(16),
-        height: 320,
+        height: _isLogin() ? 310 : 400,
         width: deviceSize.width * 0.75,
         child: Form(
+          key: _formKey,
           child: Column(
             children: [
               TextFormField(
@@ -59,24 +93,29 @@ class _AuthFormState extends State<AuthForm> {
                   return null;
                 },
               ),
-              if(_authMode == AuthMode.Signup)
+              if(_isSignup())
               TextFormField(
                 decoration: InputDecoration(labelText: 'Confirmar a senha'),
-                keyboardType: TextInputType.visiblePassword,
+                keyboardType: TextInputType.emailAddress,
                 obscureText: true,
-                validator: (_password) {
+                validator: _isLogin()
+                ? null 
+                : (_password) {
                   final password = _password ?? '';
-                  if(password != _passwordController){
+                  if(password != _passwordController.text){
                     return 'Senhas informadas não conferem';
                   }
                   return null;
                 },
               ),
               SizedBox(height: 20,),
+              if(_isLoading)
+              CircularProgressIndicator()
+              else
               ElevatedButton(
                 onPressed: _submit, 
                 child: Text(
-                  _authMode == AuthMode.Login ? 'ENTRAR' : 'REGISTRAR',
+                 _isLogin() ? 'ENTRAR' : 'REGISTRAR',
                   style: TextStyle(color: Colors.white),
                 ),
                 style: ElevatedButton.styleFrom(
@@ -84,6 +123,13 @@ class _AuthFormState extends State<AuthForm> {
                   backgroundColor: Theme.of(context).colorScheme.primary,
                 ),
                 ),
+                Spacer(),
+                TextButton(
+                  onPressed: _switchAuthMode, 
+                  child: Text(
+                    _isLogin() ? 'DESEJA REGISTAR?' : 'JÁ POSSUI CONTA?',
+                  )
+                  ),
             ],
           ),
         ),

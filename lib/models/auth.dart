@@ -42,7 +42,6 @@ class Auth with ChangeNotifier {
       }),
     );
       final body = jsonDecode(response.body);
-      print(body);
       if(body['error'] != null ) {
         throw AuthException(body['error']['message']);
       } else {
@@ -56,7 +55,7 @@ class Auth with ChangeNotifier {
           ),
         );
 
-        Store.saveMap('UserData', {
+        Store.saveMap('userData', {
           'token': _token,
           'email': _email,
           'userId': _userId,
@@ -66,7 +65,6 @@ class Auth with ChangeNotifier {
         _autoLogout();
         notifyListeners();
       }
-      print(body);
     }
 
   Future<void> signup(String email, String password) async {
@@ -78,14 +76,14 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> tryAutoLogin() async {
-    if(isAuth) return;
+    if (isAuth) return;
 
     final userData = await Store.getMap('userData');
 
-    if(userData.isEmpty) return;
+    if (userData.isEmpty) return;
 
     final expiryDate = DateTime.parse(userData['expiryDate']);
-    if(expiryDate.isBefore(DateTime.now())) return;
+    if (expiryDate.isBefore(DateTime.now())) return;
 
     _token = userData['token'];
     _email = userData['email'];
@@ -102,7 +100,9 @@ class Auth with ChangeNotifier {
    _userId = null;
    _expiryDate = null;
    _clearLogoutTimer();
+   Store.remove('userData').then((_) {
    notifyListeners();
+   });
   }
 
   void _clearLogoutTimer() {
